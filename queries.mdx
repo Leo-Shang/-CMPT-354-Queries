@@ -1,0 +1,45 @@
+-- a
+select 
+{([Date].[Calendar Year].&[2007])} on 0,
+non empty({([Product].[Product Categories].[Category].members),([Product].[Product Categories].[Product].members)}) on 1
+from [Adventure Works]
+where {([Measures].[Reseller Sales Amount])}
+
+-- b
+select
+{([Date].[Calendar].[Calendar Year].&[2007]),([Date].[Calendar].[Calendar Year].&[2008])} on 0,
+{([Geography].[Country].&[Canada]), ([Geography].[Country].&[France])} on 1
+from [Adventure Works]
+where {([Measures].[Reseller Sales Amount])}
+
+-- c
+select
+{[Date].[Calendar Year].children} on 0,
+{[Product].[Model Name].&[Rear Brakes]:[Product].[Model Name].&[Road-750]-[Product].[Model Name].&[Road Bottle Cage]-[Product].[Model Name].&[Road Tire Tube]} on 1
+from [Adventure Works]
+where {[Measures].[Reseller Sales Amount]}
+
+-- d
+select
+{([Date].[Calendar].[Calendar Year].&[2008])} on 0,
+{([Customer].[City].&[Bellingham]&[WA]),([Customer].[City].&[Seattle]&[WA])} on 1
+from [Adventure Works]
+where {([Measures].[Internet Sales Amount],[Product].[Product Categories].[Category].&[1])}
+
+-- e 
+select
+{([Measures].[Internet Sales Amount])} on 0,
+{([Customer].[Education].members)} 
+having ([Measures].[Internet Sales Amount]) > 2000000 
+on 1
+from [Adventure Works]
+where [Customer].[Gender].&[F]
+
+-- f
+with
+	member Measures.maxVal as
+	max([Product].[Product Categories].[Category].members, [Measures].[Reseller Sales Amount])
+select
+{Measures.maxVal} on 0,
+{([Date].[Calendar Week of Year].members)} on 1
+from [Adventure Works]
